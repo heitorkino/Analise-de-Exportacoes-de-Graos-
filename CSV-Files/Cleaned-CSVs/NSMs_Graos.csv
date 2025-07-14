@@ -1,0 +1,34 @@
+ID,Produto
+09011110,"Café não torrado, não descafeinado, em grão"
+09011190,"Café não torrado, não descafeinado, exceto em grão"
+09011200,"Café não torrado, descafeinado"
+10011010,Trigo duro para semeadura
+10011090,"Trigo duro, exceto para semeadura"
+10011100,"Trigo duro, para semeadura"
+10011900,"Trigo duro, exceto para semeadura"
+10019010,Trigo (exceto trigo duro) para semeadura
+10019090,"Trigo (exceto trigo duro ou para semeadura), e trigo com centeio"
+10051000,Milho para semeadura
+10059010,"Milho em grão, exceto para semeadura"
+10059090,"Milho, exceto em grão"
+10061010,"Arroz com casca (arroz paddy), para semeadura"
+10061091,"Arroz com casca (arroz paddy), parboilizado"
+10061092,"Arroz com casca (arroz paddy), não parboilizado"
+10062010,"Arroz descascado (arroz cargo ou castanho), descascado, parboilizado"
+10062020,"Arroz descascado (arroz cargo ou castanho), não parboilizado"
+10063011,"Arroz semibranqueado ou branqueado, parboilizado, polido ou brunido"
+10063019,"Outros tipode de arroz semibranqueado ou branqueado, parboilizado"
+10063021,"Arroz semibranqueado ou branqueado, não parboilizado, polido ou brunido"
+10063029,"Outros tipode de arroz semibranqueado ou branqueado, não parboilizado"
+10064000,Arroz quebrado
+12010010,Soja para semeadura
+12010090,"Outros grãos de soja, mesmo triturados"
+12011000,"Soja, mesmo triturada, para semeadura"
+12019000,"Soja, mesmo triturada, exceto para semeadura"
+15071000,"Óleo de soja, em bruto, mesmo degomado"
+15079010,"Óleo de soja, refinado"
+15079011,"Óleo de soja, refinado, em recipientes com capacidade inferior ou igual a 5 litros"
+15079019,"Óleo de soja, refinado, em recipientes com capacidade menor que 5 litros"
+15079090,Outros óleos de soja
+23040010,"Farinhas e pellets, da extração do óleo de soja"
+23040090,"Bagaços e outros resíduos sólidos, da extração do óleo de soja"
