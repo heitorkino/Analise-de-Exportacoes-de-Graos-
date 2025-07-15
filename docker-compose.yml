@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:17
+    container_name: pg_container
+
+    environment:
+      POSTGRES_USER: felipe
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: exportacao-graos
+
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+    ports:
+      - "5432:5432"
+
+    networks:
+      - backend
+
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app_container
+    depends_on:
+      - db
+    environment:
+      DB_HOST: localhost
+      DB_PORT: 5433
+      DB_NAME: exportacao-graos
+      DB_USER: felipe
+      DB_PASSWORD: 1234
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: python main.py
+    networks:
+      - backend
