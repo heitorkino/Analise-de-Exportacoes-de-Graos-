@@ -1,0 +1,282 @@
+id,text
+994,A Designar
+013,Afeganistão
+015,"Aland, Ilhas"
+020,"Alboran-Perejil, Ilhas"
+017,Albânia
+023,Alemanha
+025,Alemanha Oriental
+037,Andorra
+040,Angola
+041,Anguilla
+047,Antilhas Holandesas
+042,Antártica
+043,Antígua e Barbuda
+063,Argentina
+059,Argélia
+064,Armênia
+065,Aruba
+053,Arábia Saudita
+069,Austrália
+073,Azerbaijão
+077,Bahamas
+995,Bancos Centrais
+081,Bangladesh
+083,Barbados
+080,Barein
+085,Belarus
+088,Belize
+229,Benin
+090,Bermudas
+097,Bolívia
+099,"Bonaire, Saint Eustatius e Saba"
+101,Botsuana
+102,"Bouvet, Ilha"
+105,Brasil
+108,Brunei
+111,Bulgária
+031,Burkina Faso
+115,Burundi
+119,Butão
+087,Bélgica
+098,Bósnia-Herzegovina
+127,Cabo Verde
+145,Camarões
+141,Camboja
+149,Canadá
+150,"Canal, Ilhas do (Guernsey)"
+152,"Canal, Ilhas do (Jersey)"
+151,"Canárias, Ilhas"
+154,Catar
+137,"Cayman, Ilhas"
+153,Cazaquistão
+788,Chade
+158,Chile
+160,China
+163,Chipre
+511,"Christmas (Navidad), Ilha"
+165,"Cocos (Keeling), Ilhas"
+169,Colômbia
+173,Comores
+177,Congo
+888,"Congo, República Democrática"
+183,"Cook, Ilhas"
+187,Coreia do Norte
+190,Coreia do Sul
+196,Costa Rica
+193,Costa do Marfim
+198,Coveite (Kuweit)
+195,Croácia
+199,Cuba
+200,Curaçao
+232,Dinamarca
+783,Djibuti
+235,Dominica
+237,Dubai
+240,Egito
+687,El Salvador
+244,Emirados Árabes Unidos
+239,Equador
+243,Eritreia
+247,Eslováquia
+246,Eslovênia
+245,Espanha
+249,Estados Unidos
+251,Estônia
+253,Etiópia
+255,Falkland (Malvinas)
+259,"Faroe, Ilhas"
+870,Fiji
+267,Filipinas
+271,Finlândia
+275,França
+281,Gabão
+289,Gana
+291,Geórgia
+292,"Geórgia do Sul e Sandwich do Sul, Ilhas"
+293,Gibraltar
+297,Granada
+305,Groenlândia
+301,Grécia
+309,Guadalupe
+313,Guam
+317,Guatemala
+321,Guernsey
+337,Guiana
+325,Guiana Francesa
+329,Guiné
+331,Guiné Equatorial
+334,Guiné-Bissau
+285,Gâmbia
+341,Haiti
+343,"Heard e ilhas mcdonald, Ilha"
+345,Honduras
+351,Hong Kong
+355,Hungria
+359,Ilha de Man
+365,Indonésia
+367,Inglaterra
+100,Internação na Zona Franca de Manaus
+369,Iraque
+375,Irlanda
+372,Irã
+379,Islândia
+383,Israel
+386,Itália
+388,Iugoslávia
+357,Iêmen
+358,Iêmen Democrático
+391,Jamaica
+399,Japão
+393,Jersey
+396,"Johnston, Ilhas"
+403,Jordânia
+411,Kiribati
+420,Laos
+423,"Lebuan, Ilhas"
+426,Lesoto
+427,Letônia
+434,Libéria
+440,Liechtenstein
+442,Lituânia
+445,Luxemburgo
+431,Líbano
+438,Líbia
+447,Macau
+449,Macedônia
+450,Madagascar
+452,"Madeira, Ilha da"
+458,Malavi
+461,Maldivas
+464,Mali
+467,Malta
+455,Malásia
+472,"Marianas do Norte, Ilhas"
+474,Marrocos
+476,"Marshall, Ilhas"
+477,Martinica
+488,Mauritânia
+485,Maurício
+489,Mayotte
+093,Mianmar
+499,Micronésia
+490,"Midway, Ilhas"
+494,Moldávia
+497,Mongólia
+498,Montenegro
+501,Montserrat
+505,Moçambique
+493,México
+495,Mônaco
+507,Namíbia
+508,Nauru
+517,Nepal
+521,Nicarágua
+528,Nigéria
+531,Niue
+535,"Norfolk, Ilha"
+538,Noruega
+542,Nova Caledônia
+548,Nova Zelândia
+999,Não Declarados
+000,Não Definido
+525,Níger
+556,Omã
+997,Organizações Internacionais
+563,"Pacífico, Ilhas do (Administração dos EUA)"
+566,"Pacífico, Ilhas do (EUA)"
+569,"Pacífico, Ilhas do (Território Fideicomisso EUA)"
+575,Palau
+578,Palestina
+580,Panamá
+545,Papua Nova Guiné
+583,"Papua, Território de"
+576,Paquistão
+586,Paraguai
+573,Países Baixos (Holanda)
+589,Peru
+593,Pitcairn
+599,Polinésia Francesa
+603,Polônia
+611,Porto Rico
+607,Portugal
+990,Provisão de Navios e Aeronaves
+625,Quirguistão
+623,Quênia
+628,Reino Unido
+640,República Centro-Africana
+647,República Dominicana
+660,Reunião
+670,Romênia
+675,Ruanda
+676,Rússia
+685,Saara Ocidental
+678,Saint Kitts e Nevis
+677,"Salomão, Ilhas"
+690,Samoa
+691,Samoa Americana
+697,San Marino
+710,Santa Helena
+715,Santa Lúcia
+731,Seicheles
+998,Sem informação
+728,Senegal
+735,Serra Leoa
+741,Singapura
+699,Sint Maarten
+748,Somália
+750,Sri Lanka
+754,Suazilândia
+759,Sudão
+760,Sudão do Sul
+770,Suriname
+764,Suécia
+767,Suíça
+755,Svalbard e Jan Mayen
+693,São Bartolomeu
+695,São Cristóvão e Névis
+698,"São Martinho, Ilha de (parte francesa)"
+700,São Pedro e Miquelon
+720,São Tomé e Príncipe
+705,São Vicente e Granadinas
+737,Sérvia
+744,Síria
+772,Tadjiquistão
+776,Tailândia
+161,Taiwan (Formosa)
+780,Tanzânia
+791,"Tcheca, República"
+790,Tchecoslováquia
+781,Terras Austrais Francesas
+786,Território Antártico Britânico
+782,Território Britânico do Oceano Índico
+785,Território da Alta Comissão do Pacífico Ocidental
+795,Timor Leste
+800,Togo
+810,Tonga
+805,Toquelau
+815,Trinidad e Tobago
+820,Tunísia
+823,"Turcas e Caicos, Ilhas"
+824,Turcomenistão
+827,Turquia
+828,Tuvalu
+831,Ucrânia
+833,Uganda
+840,União das Repúblicas Socialistas Soviéticas
+845,Uruguai
+847,Uzbequistão
+551,Vanuatu
+848,Vaticano
+850,Venezuela
+858,Vietnã
+866,"Virgens, Ilhas (Americanas)"
+863,"Virgens, Ilhas (Britânicas)"
+873,"Wake, Ilha"
+875,"Wallis e Futuna, Ilhas"
+665,Zimbábue
+895,Zona do Canal do Panamá
+890,Zâmbia
+756,África do Sul
+072,Áustria
+361,Índia
