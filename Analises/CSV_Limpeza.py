@@ -82,7 +82,7 @@ df_chaves = pd.read_csv('CSV-Files/Cleaned-CSVs/NCMs_Graos.csv', encoding='utf-8
 graos_chave = df_chaves['ID'].astype(str).str.zfill(8).tolist()
 
 # 2. Carrega a base EXP_2025 com separador correto
-df_EXP = pd.read_csv('CSV-Files/Original-CSVs/EXP_2025.csv', encoding='utf-8', sep=';')
+df_EXP = pd.read_csv('CSV-Files/Original-CSVs/EXP_2024.csv', encoding='utf-8', sep=';')
 
 # 3. Garante que CO_NCM é string e sem espaços
 df_EXP['CO_NCM'] = df_EXP['CO_NCM'].astype(str).str.strip().str.zfill(8)
@@ -91,7 +91,7 @@ df_EXP['CO_NCM'] = df_EXP['CO_NCM'].astype(str).str.strip().str.zfill(8)
 df_EXP_filtrado = df_EXP[df_EXP['CO_NCM'].isin(graos_chave)].copy()
 
 # 5. Exporta o resultado
-df_EXP_filtrado.to_csv('CSV-Files/Cleaned-CSVs/EXP_2025_Revisada.csv', index=False, encoding='utf-8', sep=',')
+df_EXP_filtrado.to_csv('CSV-Files/Cleaned-CSVs/EXP_2024_Revisada.csv', index=False, encoding='utf-8', sep=',')
 
 print(f"✅ Exportado EXP_2023_Revisada.csv com {len(df_EXP_filtrado)} linhas.")
 
