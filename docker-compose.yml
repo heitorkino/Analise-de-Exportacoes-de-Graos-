@@ -39,3 +39,9 @@ services:
     command: python main.py
     networks:
       - backend
+
+volumes:
+  pgdata:
+
+networks:
+  backend:
