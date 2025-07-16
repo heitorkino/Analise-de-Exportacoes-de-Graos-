@@ -1,4 +1,5 @@
 import psycopg2
+import csv
 
 try:
     conn = psycopg2.connect(
@@ -10,9 +11,7 @@ try:
     )
     cursor = conn.cursor()
 
-    cursor.execute("""
-        DROP TABLE NCMs
-    """)
+    # Criação tabela NCMs
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS NCMs(
             ID_NCM INTEGER NOT NULL,
@@ -22,21 +21,17 @@ try:
         )
     """)
 
-    cursor.execute("""
-        DROP TABLE Paises
-    """)
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS Paises(
-            ID_PAIS INTEGER NOT NULL,
-            PAIS VARCHAR(100) NOT NULL,
+    # Inserção de dados na tabela NCMs
+    with open('./CSV-Files/Cleaned-CSVs/NCMs_Graos.csv', newline='', encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            cursor.execute("""
+                INSERT INTO NCMs (ID_NCM, PRODUTO)
+                VALUES (%s, %s)
+                ON CONFLICT (ID_NCM) DO NOTHING;
+            """, (row['ID'], row['Produto']))
 
-            CONSTRAINT pk_Paises PRIMARY KEY (ID_PAIS)           
-        )
-    """)
-
-    cursor.execute("""
-        DROP TABLE URFs
-    """)
+    # Criação tabela URFs
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS URFs(
             ID_URF INTEGER NOT NULL,
@@ -46,9 +41,17 @@ try:
         )
     """)
 
-    cursor.execute("""
-        DROP TABLE Vias
-    """)
+    # Inserção de dados na tabela URFs
+    with open('./CSV-Files/Cleaned-CSVs/URFs_Limpo.csv', newline='', encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            cursor.execute("""
+                INSERT INTO URFs (ID_URF, URF)
+                VALUES (%s, %s)
+                ON CONFLICT (ID_URF) DO NOTHING;
+            """, (row['Código'], row['Descrição']))
+
+    # Criação tabela Vias
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS Vias(
             ID_VIA INTEGER NOT NULL,
@@ -58,9 +61,37 @@ try:
         )
     """)
 
+    # Inserção de dados na tabela Vias
+    with open('./CSV-Files/Cleaned-CSVs/Vias_Limpo.csv', newline='', encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            cursor.execute("""
+                INSERT INTO Vias (ID_VIA, VIA)
+                VALUES (%s, %s)
+                ON CONFLICT (ID_VIA) DO NOTHING;
+            """, (row['ID'], row['Via']))
+
+    # Criação tabela Paises
     cursor.execute("""
-        DROP TABLE Blocos_Economicos
+        CREATE TABLE IF NOT EXISTS Paises(
+            ID_PAIS INTEGER NOT NULL,
+            PAIS VARCHAR(100) NOT NULL,
+
+            CONSTRAINT pk_Paises PRIMARY KEY (ID_PAIS)           
+        )
     """)
+
+    # Inserção de dados na tabela Paises
+    with open('./CSV-Files/Cleaned-CSVs/Paises_Limpo.csv', newline='', encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            cursor.execute("""
+                INSERT INTO Paises (ID_PAIS, PAIS)
+                VALUES (%s, %s)
+                ON CONFLICT (ID_PAIS) DO NOTHING;
+            """, (row['id'], row['text']))
+
+    # Criação tabela Blocos_Economicos
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS Blocos_Economicos(
             ID_BLOCO INTEGER NOT NULL,
@@ -70,10 +101,17 @@ try:
         )
     """)
 
-        
-    cursor.execute("""
-        DROP TABLE Paises_Blocos
-    """)
+    # Inserção de dados na tabela Blocos_Economicos
+    with open('./CSV-Files/Cleaned-CSVs/Blocos_Unicos.csv', newline='', encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            cursor.execute("""
+                INSERT INTO Blocos_Economicos (ID_BLOCO, BLOCO)
+                VALUES (%s, %s)
+                ON CONFLICT (ID_BLOCO) DO NOTHING;
+            """, (row['id'], row['text']))
+
+    # Criação tabela Paises_Blocos
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS Paises_Blocos(
             ID_PAIS INTEGER NOT NULL,
@@ -86,12 +124,30 @@ try:
             CONSTRAINT fk_ID_BLOCO FOREIGN KEY (ID_BLOCO) REFERENCES Blocos_Economicos(ID_BLOCO)
         )
     """)
+    
+    # Inserção de dados na tabela Paises_Blocos
+    with open('./CSV-Files/Cleaned-CSVs/Blocos_Paises.csv', newline='', encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile)
 
+        cursor.execute("SELECT ID_PAIS FROM Paises")
+        paises_existentes = set(row[0] for row in cursor.fetchall())
+        
+        for row in reader:
+            id_pais = int(row['Países'])
+            id_bloco = int(row['Bloco'])
+
+            if id_pais in paises_existentes:
+                cursor.execute("""
+                    INSERT INTO Paises_Blocos (ID_PAIS, ID_BLOCO)
+                    VALUES (%s, %s)
+                    ON CONFLICT (ID_PAIS, ID_BLOCO) DO NOTHING
+                """, (id_pais, id_bloco))
+            else:
+                print(f"⚠️ País {id_pais} não encontrado em 'Paises'. Linha ignorada.")
+
+    # Criação tabela exportacoes
     cursor.execute("""
-        DROP TABLE exportacoes
-    """)
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS exportacoes(
+        CREATE TABLE IF NOT EXISTS Exportacoes(
             ID_EXPORTACAO SERIAL PRIMARY KEY, 
             CO_ANO INTEGER NOT NULL,
             CO_MES INTEGER NOT NULL,
@@ -112,6 +168,33 @@ try:
         )  
     """)
 
+    # Inserção dos dados dos CSVs "EXP_2023_Revisada.csv", "EXP_2024_Revisada.csv" e "EXP_2024_Revisada.csv" na tabela exportacoes
+    def inserir_exportacoes(caminho_CSVs: list):
+        for caminho_CSV in caminho_CSVs:
+            with open(caminho_CSV, newline='', encoding='utf-8') as csvfile:
+                reader = csv.DictReader(csvfile)
+                for row in reader:
+                    cursor.execute("""
+                        INSERT INTO exportacoes (
+                            CO_ANO, CO_MES, CO_NCM, CO_UNID, CO_PAIS,
+                            SG_UF_NCM, CO_VIA, CO_URF,
+                            QT_ESTAT, KG_LIQUIDO, VL_FOB       
+                        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                        ON CONFLICT DO NOTHING
+                    """, (
+                        row['CO_ANO'], row['CO_MES'], row['CO_NCM'], row['CO_UNID'],
+                    row['CO_PAIS'], row['SG_UF_NCM'], row['CO_VIA'], row['CO_URF'],
+                    row['QT_ESTAT'], row['KG_LIQUIDO'], row['VL_FOB']
+                    ))
+
+    CSVs_Tabela_Exportacoes = [
+        './CSV-Files/Cleaned-CSVs/EXP_2023_Revisada.csv',
+        './CSV-Files/Cleaned-CSVs/EXP_2024_Revisada.csv',
+        './CSV-Files/Cleaned-CSVs/EXP_2024_Revisada.csv'
+    ]
+
+    inserir_exportacoes(CSVs_Tabela_Exportacoes)
+    
     conn.commit()
     print("Tabelas criadas com sucesso.")
 
