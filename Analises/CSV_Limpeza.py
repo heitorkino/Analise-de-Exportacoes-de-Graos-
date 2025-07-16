@@ -104,8 +104,8 @@ print(f"✅ Exportado EXP_2023_Revisada.csv com {len(df_EXP_filtrado)} linhas.")
 
 # df_Paises = pd.read_csv('CSV-Files/Cleaned-CSVs/Paises_Limpo.csv', encoding='utf-8', sep=',')
 
-# df_URFs = pd.read_csv('CSV-Files/Cleaned-CSVs/UFRs_Limpo.csv', encoding='utf-8', sep=';')
-# df_URFs.to_csv('CSV-Files/Cleaned-CSVs/UFRs_Limpo.csv', encoding='utf-8', sep=',')
+# df_URFs = pd.read_csv('CSV-Files/Cleaned-CSVs/URFs_Limpo.csv', encoding='utf-8', sep=';')
+# df_URFs.to_csv('CSV-Files/Cleaned-CSVs/URFs_Limpo.csv', encoding='utf-8', sep=',')
 
 
 # df_Vias = pd.read_csv('CSV-Files/Cleaned-CSVs/Vias_Limpo.csv', encoding='utf-8', sep=';')
