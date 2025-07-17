@@ -1,11 +1,17 @@
+# Este script realiza a filtragem e limpeza de dados relacionados à exportação de grãos.
+# Ele cruza os códigos NCM relevantes com os dados de exportação de 2023, removendo NCMs indesejados
+# e gerando arquivos CSV limpos para uso posterior na análise ou em modelos de ML.
+
 import pandas as pd
 import csv
 import unidecode
 
-#--------------------------------------------------------------------------------------------------------------------------#
-import pandas as pd
-import unicodedata
-import csv
+# -----------------------------------------------------------------------------------
+# BLOCO COMENTADO: PRÉ-PROCESSAMENTO DE NCMs ORIGINAIS
+# O trecho abaixo (comentado) carrega o CSV com NCMs originais, normaliza nomes de produtos,
+# filtra os que contêm palavras-chave (como "trigo", "milho", etc.), remove NCMs irrelevantes
+# e exporta um CSV com os códigos limpos.
+# -----------------------------------------------------------------------------------
 
 # # 1. Carregar CSV
 # df_NCS = pd.read_csv('CSV-Files/Original-CSVs/NCMs.csv', encoding='utf-8', sep=',')
@@ -63,7 +69,7 @@ import csv
 #     '21011200', '21013000', '21031010', '11032100', '15152910', '15152990', '85167100', '44079960', '35040020'
 # ]
 
-# df_final = df_final[~df_final['ID'].isin(ncm_excluir)]
+# df_final = df_final[df_final['ID'].isin(ncm_excluir)]
 
 # # 9. Exportar resultado final
 # df_final[['ID', 'Produto']].to_csv(
@@ -77,25 +83,31 @@ import csv
 # print(f"✅ CSV final exportado com {len(df_final)} produtos contendo grãos e trigo filtrados por nome (excluídos {len(ncm_excluir)} NCMs indesejados).")
 
 #--------------------------------------------------------------------------------------------------------------------------#
-# 1. Carrega a tabela com os NCMs considerados relevantes (grãos/trigo)
+
+# ETAPA 1: Carrega a lista de NCMs de grãos/trigo previamente filtrados
 df_chaves = pd.read_csv('CSV-Files/Cleaned-CSVs/NCMs_Graos.csv', encoding='utf-8', sep=',')
 graos_chave = df_chaves['ID'].astype(str).str.zfill(8).tolist()
 
-# 2. Carrega a base EXP_2025 com separador correto
+# ETAPA 2: Carrega o CSV original de exportações (formato separado por ponto e vírgula)
 df_EXP = pd.read_csv('CSV-Files/Original-CSVs/EXP_2023.csv', encoding='utf-8', sep=';')
 
-# 3. Garante que CO_NCM é string e sem espaços
+# ETAPA 3: Normaliza a coluna CO_NCM (remove espaços e completa com zeros à esquerda)
 df_EXP['CO_NCM'] = df_EXP['CO_NCM'].astype(str).str.strip().str.zfill(8)
 
-# 4. Filtra apenas as linhas cujo CO_NCM está na lista de NCMs filtrados
+# ETAPA 4: Filtra apenas as linhas onde o CO_NCM está na lista de grãos/trigo
 df_EXP_filtrado = df_EXP[df_EXP['CO_NCM'].isin(graos_chave)].copy()
 
-# 5. Exporta o resultado
+# ETAPA 5: Exporta o CSV filtrado com os dados relevantes
 df_EXP_filtrado.to_csv('CSV-Files/Cleaned-CSVs/EXP_2023_Revisada.csv', index=False, encoding='utf-8', sep=',')
 
 print(f"✅ Exportado EXP_2023_Revisada.csv com {len(df_EXP_filtrado)} linhas.")
 
-#-------------------------------------------------------------------------------------------------------------------------#
+# -----------------------------------------------------------------------------------
+# BLOCO OPCIONAL COMENTADO: Carga e reexportação de outras tabelas limpas
+# Esses trechos permitem converter arquivos com separadores inconsistentes (como ponto e vírgula)
+# e inspecionar os dados carregados com df.info().
+# -----------------------------------------------------------------------------------
+
 # df_blocos = pd.read_csv('CSV-Files/Cleaned-CSVs/Blocos_Unicos.csv', encoding='utf-8', sep=',')
 
 # df_Exp = pd.read_csv('CSV-Files/Cleaned-CSVs/EXP_2025_Cleaned.csv', encoding='utf-8', sep=',')
@@ -128,13 +140,5 @@ print(f"✅ Exportado EXP_2023_Revisada.csv com {len(df_EXP_filtrado)} linhas.")
 # print("-------------------------------------------")
 # df_UFs.info()
 #-------------------------------------------------------------------------------------------------------------------------#
-
-
-
-
-
-
-
-
 
 # print("✅ Arquivo CSV gerado com sucesso!")

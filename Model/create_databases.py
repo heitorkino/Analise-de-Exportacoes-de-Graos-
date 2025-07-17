@@ -1,7 +1,12 @@
+# Este script cria e popula tabelas PostgreSQL com dados de exportações, NCMs, países, vias, URFs, blocos econômicos
+# e suas associações. Ele lê os dados de arquivos CSV previamente limpos e realiza a inserção no banco de dados.
+# Também verifica conflitos de chave primária para evitar duplicatas.
+
 import psycopg2
 import csv
 
 try:
+    # Conexão com o banco PostgreSQL local
     conn = psycopg2.connect(
         host="localhost",
         port="5433",
@@ -11,7 +16,7 @@ try:
     )
     cursor = conn.cursor()
 
-    # Criação tabela NCMs
+    # -------------------- Criação e Inserção: Tabela NCMs --------------------
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS NCMs(
             ID_NCM INTEGER NOT NULL,
@@ -21,7 +26,6 @@ try:
         )
     """)
 
-    # Inserção de dados na tabela NCMs
     with open('./CSV-Files/Cleaned-CSVs/NCMs_Graos.csv', newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
@@ -31,7 +35,7 @@ try:
                 ON CONFLICT (ID_NCM) DO NOTHING;
             """, (row['ID'], row['Produto']))
 
-    # Criação tabela URFs
+    # -------------------- Criação e Inserção: Tabela URFs --------------------
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS URFs(
             ID_URF INTEGER NOT NULL,
@@ -41,7 +45,6 @@ try:
         )
     """)
 
-    # Inserção de dados na tabela URFs
     with open('./CSV-Files/Cleaned-CSVs/URFs_Limpo.csv', newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
@@ -51,7 +54,7 @@ try:
                 ON CONFLICT (ID_URF) DO NOTHING;
             """, (row['Código'], row['Descrição']))
 
-    # Criação tabela Vias
+    # -------------------- Criação e Inserção: Tabela Vias --------------------
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS Vias(
             ID_VIA INTEGER NOT NULL,
@@ -61,7 +64,6 @@ try:
         )
     """)
 
-    # Inserção de dados na tabela Vias
     with open('./CSV-Files/Cleaned-CSVs/Vias_Limpo.csv', newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
@@ -71,7 +73,7 @@ try:
                 ON CONFLICT (ID_VIA) DO NOTHING;
             """, (row['ID'], row['Via']))
 
-    # Criação tabela Paises
+    # -------------------- Criação e Inserção: Tabela Paises --------------------
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS Paises(
             ID_PAIS INTEGER NOT NULL,
@@ -81,7 +83,6 @@ try:
         )
     """)
 
-    # Inserção de dados na tabela Paises
     with open('./CSV-Files/Cleaned-CSVs/Paises_Limpo.csv', newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
@@ -91,7 +92,7 @@ try:
                 ON CONFLICT (ID_PAIS) DO NOTHING;
             """, (row['id'], row['text']))
 
-    # Criação tabela Blocos_Economicos
+    # -------------------- Criação e Inserção: Tabela Blocos_Economicos --------------------
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS Blocos_Economicos(
             ID_BLOCO INTEGER NOT NULL,
@@ -101,7 +102,6 @@ try:
         )
     """)
 
-    # Inserção de dados na tabela Blocos_Economicos
     with open('./CSV-Files/Cleaned-CSVs/Blocos_Unicos.csv', newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
@@ -111,7 +111,7 @@ try:
                 ON CONFLICT (ID_BLOCO) DO NOTHING;
             """, (row['id'], row['text']))
 
-    # Criação tabela Paises_Blocos
+    # -------------------- Criação e Inserção: Tabela Paises_Blocos --------------------
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS Paises_Blocos(
             ID_PAIS INTEGER NOT NULL,
@@ -125,10 +125,10 @@ try:
         )
     """)
     
-    # Inserção de dados na tabela Paises_Blocos
     with open('./CSV-Files/Cleaned-CSVs/Blocos_Paises.csv', newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
 
+        # Verifica previamente os países existentes para evitar erro de chave estrangeira
         cursor.execute("SELECT ID_PAIS FROM Paises")
         paises_existentes = set(row[0] for row in cursor.fetchall())
         
@@ -145,7 +145,7 @@ try:
             else:
                 print(f"⚠️ País {id_pais} não encontrado em 'Paises'. Linha ignorada.")
 
-    # Criação tabela exportacoes
+    # -------------------- Criação da Tabela Exportacoes --------------------
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS Exportacoes(
             ID_EXPORTACAO SERIAL PRIMARY KEY, 
@@ -168,7 +168,7 @@ try:
         )  
     """)
 
-    # Inserção dos dados dos CSVs "EXP_2023_Revisada.csv", "EXP_2024_Revisada.csv" e "EXP_2024_Revisada.csv" na tabela exportacoes
+    # -------------------- Inserção de Dados nas Exportações --------------------
     def inserir_exportacoes(caminho_CSVs: list):
         for caminho_CSV in caminho_CSVs:
             with open(caminho_CSV, newline='', encoding='utf-8') as csvfile:
@@ -187,21 +187,23 @@ try:
                     row['QT_ESTAT'], row['KG_LIQUIDO'], row['VL_FOB']
                     ))
 
+    # Lista dos arquivos CSV a serem importados
     CSVs_Tabela_Exportacoes = [
         './CSV-Files/Cleaned-CSVs/EXP_2023_Revisada.csv',
         './CSV-Files/Cleaned-CSVs/EXP_2024_Revisada.csv',
-        './CSV-Files/Cleaned-CSVs/EXP_2024_Revisada.csv'
+        './CSV-Files/Cleaned-CSVs/EXP_2025_Revisada.csv'
     ]
 
     inserir_exportacoes(CSVs_Tabela_Exportacoes)
     
-    conn.commit()
+    conn.commit() # Confirma todas as operações no banco
     print("Tabelas criadas com sucesso.")
 
 except Exception as e:
     print(f"Erro ao conectar ou criar as tabelas: {e}")
 
 finally:
+    # Encerra a conexão com o banco
     if conn:
         cursor.close()
         conn.close()

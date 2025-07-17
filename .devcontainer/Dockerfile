@@ -1,9 +1,18 @@
-FROM python:3.11
+# Este Dockerfile define uma imagem personalizada baseada em Python 3.11.
+# Ele configura o ambiente de trabalho, copia os arquivos do projeto,
+# instala as dependências e define o comando para iniciar o script main.py.
 
-WORKDIR /app
+# Usa a imagem oficial do Python 3.11 como base
+FROM python:3.11     
 
-COPY . .
+# Define o diretório de trabalho dentro do contêiner
+WORKDIR /app        
 
-RUN pip install -r requirements.txt
+# Copia todos os arquivos do diretório atual para o contêiner
+COPY . .            
 
-CMD ["python", "main.py"]
+# Instala as dependências listadas no requirements.txt
+RUN pip install -r requirements.txt  
+
+# Comando padrão para executar o script main.py quando o contêiner iniciar
+CMD ["python", "main.py"]   
