@@ -6,7 +6,7 @@ services:
     container_name: pg_container
 
     environment:
-      POSTGRES_USER: felipe
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 1234
       POSTGRES_DB: exportacao-graos
 
@@ -31,7 +31,7 @@ services:
       DB_HOST: localhost
       DB_PORT: 5433
       DB_NAME: exportacao-graos
-      DB_USER: felipe
+      DB_USER: postgres
       DB_PASSWORD: 1234
     volumes:
       - .:/app
