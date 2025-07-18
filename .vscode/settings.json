@@ -1,0 +1,13 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5433,
+            "driver": "PostgreSQL",
+            "name": "DB_Exportacao_Graos",
+            "database": "exportacao-graos",
+            "username": "postgres"
+        }
+    ]
+}
