@@ -11,7 +11,7 @@ try:
         host="localhost",
         port="5433",
         database="exportacao-graos",
-        user="felipe",
+        user="postgres",
         password="1234"
     )
     cursor = conn.cursor()
