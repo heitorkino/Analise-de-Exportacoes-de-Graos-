@@ -145,9 +145,51 @@ try:
             else:
                 print(f"⚠️ País {id_pais} não encontrado em 'Paises'. Linha ignorada.")
 
-    # -------------------- Criação da Tabela Exportacoes --------------------
+    # -------------------- Criação das Tabelas Exportações --------------------
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS Exportacoes(
+        CREATE TABLE IF NOT EXISTS exportacoes_2023(
+            ID_EXPORTACAO SERIAL PRIMARY KEY, 
+            CO_ANO INTEGER NOT NULL,
+            CO_MES INTEGER NOT NULL,
+            CO_NCM INTEGER NOT NULL,
+            CO_UNID INTEGER NOT NULL,
+            CO_PAIS INTEGER NOT NULL,
+            SG_UF_NCM CHAR(2) NOT NULL,
+            CO_VIA INTEGER NOT NULL,
+            CO_URF INTEGER NOT NULL,
+            QT_ESTAT INTEGER NOT NULL,
+            KG_LIQUIDO INTEGER NOT NULL,
+            VL_FOB INTEGER NOT NULL,
+
+            CONSTRAINT fk_NCM FOREIGN KEY (CO_NCM) REFERENCES NCMs(ID_NCM),      
+            CONSTRAINT fk_PAIS FOREIGN KEY (CO_PAIS) REFERENCES Paises(ID_PAIS),      
+            CONSTRAINT fk_URF FOREIGN KEY (CO_URF) REFERENCES URFs(ID_URF),      
+            CONSTRAINT fk_VIA FOREIGN KEY (CO_VIA) REFERENCES Vias(ID_VIA)      
+        )  
+    """)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS exportacoes_2024(
+            ID_EXPORTACAO SERIAL PRIMARY KEY, 
+            CO_ANO INTEGER NOT NULL,
+            CO_MES INTEGER NOT NULL,
+            CO_NCM INTEGER NOT NULL,
+            CO_UNID INTEGER NOT NULL,
+            CO_PAIS INTEGER NOT NULL,
+            SG_UF_NCM CHAR(2) NOT NULL,
+            CO_VIA INTEGER NOT NULL,
+            CO_URF INTEGER NOT NULL,
+            QT_ESTAT INTEGER NOT NULL,
+            KG_LIQUIDO INTEGER NOT NULL,
+            VL_FOB INTEGER NOT NULL,
+
+            CONSTRAINT fk_NCM FOREIGN KEY (CO_NCM) REFERENCES NCMs(ID_NCM),      
+            CONSTRAINT fk_PAIS FOREIGN KEY (CO_PAIS) REFERENCES Paises(ID_PAIS),      
+            CONSTRAINT fk_URF FOREIGN KEY (CO_URF) REFERENCES URFs(ID_URF),      
+            CONSTRAINT fk_VIA FOREIGN KEY (CO_VIA) REFERENCES Vias(ID_VIA)      
+        )  
+    """)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS exportacoes_2025(
             ID_EXPORTACAO SERIAL PRIMARY KEY, 
             CO_ANO INTEGER NOT NULL,
             CO_MES INTEGER NOT NULL,
@@ -169,32 +211,47 @@ try:
     """)
 
     # -------------------- Inserção de Dados nas Exportações --------------------
-    def inserir_exportacoes(caminho_CSVs: list):
-        for caminho_CSV in caminho_CSVs:
-            with open(caminho_CSV, newline='', encoding='utf-8') as csvfile:
-                reader = csv.DictReader(csvfile)
-                for row in reader:
-                    cursor.execute("""
-                        INSERT INTO exportacoes (
-                            CO_ANO, CO_MES, CO_NCM, CO_UNID, CO_PAIS,
-                            SG_UF_NCM, CO_VIA, CO_URF,
-                            QT_ESTAT, KG_LIQUIDO, VL_FOB       
-                        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                        ON CONFLICT DO NOTHING
-                    """, (
-                        row['CO_ANO'], row['CO_MES'], row['CO_NCM'], row['CO_UNID'],
+    with open('./CSV-Files/Cleaned-CSVs/EXP_2023_Revisada.csv', newline='', encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            cursor.execute("""
+                INSERT INTO exportacoes_2023 (
+                    CO_ANO, CO_MES, CO_NCM, CO_UNID, CO_PAIS,
+                    SG_UF_NCM, CO_VIA, CO_URF,
+                    QT_ESTAT, KG_LIQUIDO, VL_FOB
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                ON CONFLICT (ID_EXPORTACAO) DO NOTHING;
+            """, (row['CO_ANO'], row['CO_MES'], row['CO_NCM'], row['CO_UNID'],
                     row['CO_PAIS'], row['SG_UF_NCM'], row['CO_VIA'], row['CO_URF'],
-                    row['QT_ESTAT'], row['KG_LIQUIDO'], row['VL_FOB']
-                    ))
+                    row['QT_ESTAT'], row['KG_LIQUIDO'], row['VL_FOB']))
 
-    # Lista dos arquivos CSV a serem importados
-    CSVs_Tabela_Exportacoes = [
-        './CSV-Files/Cleaned-CSVs/EXP_2023_Revisada.csv',
-        './CSV-Files/Cleaned-CSVs/EXP_2024_Revisada.csv',
-        './CSV-Files/Cleaned-CSVs/EXP_2025_Revisada.csv'
-    ]
+    with open('./CSV-Files/Cleaned-CSVs/EXP_2024_Revisada.csv', newline='', encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            cursor.execute("""
+                INSERT INTO exportacoes_2024 (
+                    CO_ANO, CO_MES, CO_NCM, CO_UNID, CO_PAIS,
+                    SG_UF_NCM, CO_VIA, CO_URF,
+                    QT_ESTAT, KG_LIQUIDO, VL_FOB
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                ON CONFLICT (ID_EXPORTACAO) DO NOTHING;
+            """, (row['CO_ANO'], row['CO_MES'], row['CO_NCM'], row['CO_UNID'],
+                    row['CO_PAIS'], row['SG_UF_NCM'], row['CO_VIA'], row['CO_URF'],
+                    row['QT_ESTAT'], row['KG_LIQUIDO'], row['VL_FOB']))
 
-    inserir_exportacoes(CSVs_Tabela_Exportacoes)
+    with open('./CSV-Files/Cleaned-CSVs/EXP_2025_Revisada.csv', newline='', encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            cursor.execute("""
+                INSERT INTO exportacoes_2025 (
+                    CO_ANO, CO_MES, CO_NCM, CO_UNID, CO_PAIS,
+                    SG_UF_NCM, CO_VIA, CO_URF,
+                    QT_ESTAT, KG_LIQUIDO, VL_FOB
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                ON CONFLICT (ID_EXPORTACAO) DO NOTHING;
+            """, (row['CO_ANO'], row['CO_MES'], row['CO_NCM'], row['CO_UNID'],
+                    row['CO_PAIS'], row['SG_UF_NCM'], row['CO_VIA'], row['CO_URF'],
+                    row['QT_ESTAT'], row['KG_LIQUIDO'], row['VL_FOB']))
     
     conn.commit() # Confirma todas as operações no banco
     print("Tabelas criadas com sucesso.")
