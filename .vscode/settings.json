@@ -3,7 +3,7 @@
         {
             "previewLimit": 50,
             "server": "localhost",
-            "port": 5433,
+            "port": 5432,
             "driver": "PostgreSQL",
             "name": "DB_Exportacao_Graos",
             "database": "exportacao-graos",
