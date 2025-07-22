@@ -9,7 +9,7 @@ try:
     # Conexão com o banco PostgreSQL local
     conn = psycopg2.connect(
         host="localhost",
-        port="5433",
+        port="5432",
         database="exportacao-graos",
         user="postgres",
         password="1234"
@@ -19,10 +19,8 @@ try:
     # -------------------- Criação e Inserção: Tabela NCMs --------------------
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS NCMs(
-            ID_NCM INTEGER NOT NULL,
-            PRODUTO VARCHAR(100) NOT NULL,
-
-            CONSTRAINT pk_NCMs PRIMARY KEY (ID_NCM)          
+            ID_NCM INTEGER PRIMARY KEY NOT NULL,
+            PRODUTO VARCHAR(100) NOT NULL        
         )
     """)
 
@@ -34,14 +32,29 @@ try:
                 VALUES (%s, %s)
                 ON CONFLICT (ID_NCM) DO NOTHING;
             """, (row['ID'], row['Produto']))
+    
+    # -------------------- Criação e Inserção: Tabela UFs --------------------
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS UFs(
+            ID_UF VARCHAR(2) PRIMARY KEY NOT NULL,
+            NOME VARCHAR(100) NOT NULL        
+        )
+    """)
+
+    with open('./CSV-Files/Cleaned-CSVs/UF_Limpo.csv', newline='', encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            cursor.execute("""
+                INSERT INTO UFs (ID_UF, NOME)
+                VALUES (%s, %s)
+                ON CONFLICT (ID_UF) DO NOTHING;
+            """, (row['Sigla'], row['Nome']))
 
     # -------------------- Criação e Inserção: Tabela URFs --------------------
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS URFs(
-            ID_URF INTEGER NOT NULL,
-            URF VARCHAR(100) NOT NULL, 
-
-            CONSTRAINT pk_URFs PRIMARY KEY (ID_URF)          
+            ID_URF INTEGER PRIMARY KEY NOT NULL,
+            URF VARCHAR(100) NOT NULL          
         )
     """)
 
@@ -57,10 +70,8 @@ try:
     # -------------------- Criação e Inserção: Tabela Vias --------------------
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS Vias(
-            ID_VIA INTEGER NOT NULL,
-            VIA VARCHAR(100) NOT NULL, 
-
-            CONSTRAINT pk_Vias PRIMARY KEY (ID_VIA)
+            ID_VIA INTEGER PRIMARY KEY NOT NULL,
+            VIA VARCHAR(100) NOT NULL
         )
     """)
 
@@ -76,10 +87,8 @@ try:
     # -------------------- Criação e Inserção: Tabela Paises --------------------
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS Paises(
-            ID_PAIS INTEGER NOT NULL,
-            PAIS VARCHAR(100) NOT NULL,
-
-            CONSTRAINT pk_Paises PRIMARY KEY (ID_PAIS)           
+            ID_PAIS INTEGER PRIMARY KEY NOT NULL,
+            PAIS VARCHAR(100) NOT NULL         
         )
     """)
 
@@ -95,10 +104,8 @@ try:
     # -------------------- Criação e Inserção: Tabela Blocos_Economicos --------------------
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS Blocos_Economicos(
-            ID_BLOCO INTEGER NOT NULL,
-            BLOCO VARCHAR(100) NOT NULL,
-                   
-            CONSTRAINT pk_Blocos_Economicos PRIMARY KEY (ID_BLOCO)           
+            ID_BLOCO INTEGER PRIMARY KEY NOT NULL,
+            BLOCO VARCHAR(100) NOT NULL            
         )
     """)
 
@@ -114,13 +121,12 @@ try:
     # -------------------- Criação e Inserção: Tabela Paises_Blocos --------------------
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS Paises_Blocos(
+            ID_PAIS_BLOCO SERIAL PRIMARY KEY NOT NULL,
             ID_PAIS INTEGER NOT NULL,
             ID_BLOCO INTEGER NOT NULL,
-                   
-            CONSTRAINT pk_Paises_Blocos PRIMARY KEY (ID_PAIS, ID_BLOCO),
-                   
+                        
+            UNIQUE (ID_PAIS, ID_BLOCO),
             CONSTRAINT fk_ID_PAIS FOREIGN KEY (ID_PAIS) REFERENCES Paises(ID_PAIS),
-                   
             CONSTRAINT fk_ID_BLOCO FOREIGN KEY (ID_BLOCO) REFERENCES Blocos_Economicos(ID_BLOCO)
         )
     """)
@@ -144,6 +150,42 @@ try:
                 """, (id_pais, id_bloco))
             else:
                 print(f"⚠️ País {id_pais} não encontrado em 'Paises'. Linha ignorada.")
+    
+    # -------------------- Criação e Inserção: Tabela Significado Gargalo  --------------------
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS Significado_Gargalo(
+            ID_GARGALO_PREDITO INTEGER PRIMARY KEY NOT NULL,
+            SIGNIFICADO VARCHAR NOT NULL
+        )
+    """)
+
+    with open('./CSV-Files/Cleaned-CSVs/Significado_Gargalo_2025.csv', newline='', encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            cursor.execute("""
+                INSERT INTO Significado_Gargalo (ID_GARGALO_PREDITO, SIGNIFICADO)
+                VALUES (%s, %s)
+                ON CONFLICT (ID_GARGALO_PREDITO) DO NOTHING;
+            """, (row['GARGALO_PREDITO'], row['SIGNIFICADO']))
+    
+    # -------------------- Criação e Inserção: Tabela Predições Gargalos  --------------------
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS Predicoes_Gargalos(
+            SG_UF_NCM VARCHAR(2) PRIMARY KEY NOT NULL,
+            GARGALO_PREDITO INTEGER NOT NULL,
+            
+            CONSTRAINT fk_GARGALO_PREDITO FOREIGN KEY (GARGALO_PREDITO) REFERENCES Significado_Gargalo(ID_GARGALO_PREDITO)
+        )
+    """)
+
+    with open('./CSV-Files/Cleaned-CSVs/Predicoes_Gargalos_2025.csv', newline='', encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            cursor.execute("""
+                INSERT INTO Predicoes_Gargalos (SG_UF_NCM, GARGALO_PREDITO)
+                VALUES (%s, %s)
+                ON CONFLICT (SG_UF_NCM) DO NOTHING;
+            """, (row['SG_UF_NCM'], row['GARGALO_PREDITO']))
 
     # -------------------- Criação das Tabelas Exportações --------------------
     cursor.execute("""
@@ -154,7 +196,7 @@ try:
             CO_NCM INTEGER NOT NULL,
             CO_UNID INTEGER NOT NULL,
             CO_PAIS INTEGER NOT NULL,
-            SG_UF_NCM CHAR(2) NOT NULL,
+            SG_UF_NCM VARCHAR(2) NOT NULL,
             CO_VIA INTEGER NOT NULL,
             CO_URF INTEGER NOT NULL,
             QT_ESTAT INTEGER NOT NULL,
@@ -162,9 +204,10 @@ try:
             VL_FOB INTEGER NOT NULL,
 
             CONSTRAINT fk_NCM FOREIGN KEY (CO_NCM) REFERENCES NCMs(ID_NCM),      
-            CONSTRAINT fk_PAIS FOREIGN KEY (CO_PAIS) REFERENCES Paises(ID_PAIS),      
+            CONSTRAINT fk_PAIS FOREIGN KEY (CO_PAIS) REFERENCES Paises(ID_PAIS),
+            CONSTRAINT fk_UF FOREIGN KEY (SG_UF_NCM) REFERENCES UFs(ID_UF),      
             CONSTRAINT fk_URF FOREIGN KEY (CO_URF) REFERENCES URFs(ID_URF),      
-            CONSTRAINT fk_VIA FOREIGN KEY (CO_VIA) REFERENCES Vias(ID_VIA)      
+            CONSTRAINT fk_VIA FOREIGN KEY (CO_VIA) REFERENCES Vias(ID_VIA)       
         )  
     """)
     cursor.execute("""
@@ -175,7 +218,7 @@ try:
             CO_NCM INTEGER NOT NULL,
             CO_UNID INTEGER NOT NULL,
             CO_PAIS INTEGER NOT NULL,
-            SG_UF_NCM CHAR(2) NOT NULL,
+            SG_UF_NCM VARCHAR(2) NOT NULL,
             CO_VIA INTEGER NOT NULL,
             CO_URF INTEGER NOT NULL,
             QT_ESTAT INTEGER NOT NULL,
@@ -183,7 +226,8 @@ try:
             VL_FOB INTEGER NOT NULL,
 
             CONSTRAINT fk_NCM FOREIGN KEY (CO_NCM) REFERENCES NCMs(ID_NCM),      
-            CONSTRAINT fk_PAIS FOREIGN KEY (CO_PAIS) REFERENCES Paises(ID_PAIS),      
+            CONSTRAINT fk_PAIS FOREIGN KEY (CO_PAIS) REFERENCES Paises(ID_PAIS),
+            CONSTRAINT fk_UF FOREIGN KEY (SG_UF_NCM) REFERENCES UFs(ID_UF),      
             CONSTRAINT fk_URF FOREIGN KEY (CO_URF) REFERENCES URFs(ID_URF),      
             CONSTRAINT fk_VIA FOREIGN KEY (CO_VIA) REFERENCES Vias(ID_VIA)      
         )  
@@ -196,7 +240,7 @@ try:
             CO_NCM INTEGER NOT NULL,
             CO_UNID INTEGER NOT NULL,
             CO_PAIS INTEGER NOT NULL,
-            SG_UF_NCM CHAR(2) NOT NULL,
+            SG_UF_NCM VARCHAR(2) NOT NULL,
             CO_VIA INTEGER NOT NULL,
             CO_URF INTEGER NOT NULL,
             QT_ESTAT INTEGER NOT NULL,
@@ -204,7 +248,9 @@ try:
             VL_FOB INTEGER NOT NULL,
 
             CONSTRAINT fk_NCM FOREIGN KEY (CO_NCM) REFERENCES NCMs(ID_NCM),      
-            CONSTRAINT fk_PAIS FOREIGN KEY (CO_PAIS) REFERENCES Paises(ID_PAIS),      
+            CONSTRAINT fk_PAIS FOREIGN KEY (CO_PAIS) REFERENCES Paises(ID_PAIS),
+            CONSTRAINT fk_UF FOREIGN KEY (SG_UF_NCM) REFERENCES UFs(ID_UF),      
+            CONSTRAINT fk_PREDICAO_GARGALO FOREIGN KEY (SG_UF_NCM) REFERENCES Predicoes_Gargalos(SG_UF_NCM),      
             CONSTRAINT fk_URF FOREIGN KEY (CO_URF) REFERENCES URFs(ID_URF),      
             CONSTRAINT fk_VIA FOREIGN KEY (CO_VIA) REFERENCES Vias(ID_VIA)      
         )  
