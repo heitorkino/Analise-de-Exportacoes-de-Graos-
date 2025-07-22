@@ -299,6 +299,15 @@ try:
                     row['CO_PAIS'], row['SG_UF_NCM'], row['CO_VIA'], row['CO_URF'],
                     row['QT_ESTAT'], row['KG_LIQUIDO'], row['VL_FOB']))
     
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS predicoes_gargalos(
+        SG_UF_NCM VARCHAR(2) PRIMARY KEY NOT NULL,
+        GARGALO_PREDITO INTEGER NOT NULL,
+                   
+        CONSTRAINT fk_sg_uf_ncm FOREIGN KEY (SG_UF_NCM) REFERENCES 
+    )
+    """)
+    
     conn.commit() # Confirma todas as operações no banco
     print("Tabelas criadas com sucesso.")
 
