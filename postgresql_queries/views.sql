@@ -1,0 +1,116 @@
+CREATE VIEW vw_exports_2023_summary AS
+SELECT
+	CO_ANO,
+	SUM(VL_FOB) AS total_fob,
+	SUM(KG_LIQUIDO) AS total_kg,
+	COUNT(DISTINCT CO_MES) AS meses_com_exportacao
+FROM exportacoes_2023
+GROUP BY CO_ANO;
+
+CREATE VIEW vw_exports_2024_summary AS
+SELECT
+	CO_ANO,
+	SUM(VL_FOB) AS total_fob,
+	SUM(KG_LIQUIDO) AS total_kg,
+	COUNT(DISTINCT CO_MES) AS meses_com_exportacao
+FROM exportacoes_2024
+GROUP BY CO_ANO;
+
+CREATE VIEW vw_exports_2025_summary AS
+SELECT
+	CO_ANO,
+	SUM(VL_FOB) AS total_fob,
+	SUM(KG_LIQUIDO) AS total_kg,
+	COUNT(DISTINCT CO_MES) AS meses_com_exportacao
+FROM exportacoes_2025
+GROUP BY CO_ANO;
+
+CREATE VIEW vw_monthly_exports_2023 AS
+SELECT
+	CO_ANO,
+	CO_MES,
+	MAKE_DATE(CO_ANO, CO_MES, 1) AS data_mes,
+	SUM(VL_FOB) AS fob_mes,
+	SUM(KG_LIQUIDO) AS kg_mes
+FROM exportacoes_2023
+GROUP BY CO_ANO, CO_MES;
+
+CREATE VIEW vw_monthly_exports_2024 AS
+SELECT
+	CO_ANO,
+	CO_MES,
+	MAKE_DATE(CO_ANO, CO_MES, 1) AS data_mes,
+	SUM(VL_FOB) AS fob_mes,
+	SUM(KG_LIQUIDO) AS kg_mes
+FROM exportacoes_2024
+GROUP BY CO_ANO, CO_MES;
+
+CREATE VIEW vw_monthly_exports_2025 AS
+SELECT
+	CO_ANO,
+	CO_MES,
+	MAKE_DATE(CO_ANO, CO_MES, 1) AS data_mes,
+	SUM(VL_FOB) AS fob_mes,
+	SUM(KG_LIQUIDO) AS kg_mes
+FROM exportacoes_2025
+GROUP BY CO_ANO, CO_MES;
+
+CREATE VIEW vw_top_destinations_2023 AS
+SELECT
+	CO_ANO,
+	CO_PAIS,
+	SUM(VL_FOB) AS fob
+FROM exportacoes_2023
+GROUP BY CO_ANO, CO_PAIS
+ORDER BY CO_PAIS ASC
+LIMIT 5;
+
+CREATE VIEW vw_top_destinations_2024 AS
+SELECT
+	CO_ANO,
+	CO_PAIS,
+	SUM(VL_FOB) AS fob
+FROM exportacoes_2024
+GROUP BY CO_ANO, CO_PAIS
+ORDER BY CO_PAIS ASC
+LIMIT 5;
+
+CREATE VIEW vw_top_5_destinations_2025 AS
+SELECT
+	CO_ANO,
+	CO_PAIS,
+	SUM(VL_FOB) AS fob
+FROM exportacoes_2025
+GROUP BY CO_ANO, CO_PAIS
+ORDER BY CO_PAIS ASC
+LIMIT 5;
+
+CREATE VIEW vw_top_products_2023 AS
+SELECT
+	CO_ANO,
+	CO_NCM,
+	SUM(VL_FOB) AS fob
+FROM exportacoes_2023
+GROUP BY CO_ANO, CO_NCM
+ORDER BY CO_NCM ASC
+LIMIT 5;
+
+CREATE VIEW vw_top_products_2024 AS
+SELECT
+	CO_ANO,
+	CO_NCM,
+	SUM(VL_FOB) AS fob
+FROM exportacoes_2024
+GROUP BY CO_ANO, CO_NCM
+ORDER BY CO_NCM ASC
+LIMIT 5;
+
+CREATE VIEW vw_top_products_2025 AS
+SELECT
+	CO_ANO,
+	CO_NCM,
+	SUM(VL_FOB) AS fob
+FROM exportacoes_2025
+GROUP BY CO_ANO, CO_NCM
+ORDER BY CO_NCM ASC
+LIMIT 5;

@@ -9,7 +9,7 @@ import psycopg2
 # Estabelece a conexão com o banco de dados PostgreSQL usando credenciais do ambiente
 conn = psycopg2.connect(
     host=os.environ['localhost'],         # Host do banco de dados
-    port=os.environ['5433'],         # Porta de conexão
+    port=os.environ['5432'],         # Porta de conexão
     dbname=os.environ['exportacao-graos'],       # Nome do banco
     user=os.environ['postgres'],         # Usuário
     password=os.environ['1234']  # Senha
